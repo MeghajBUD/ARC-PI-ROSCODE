@@ -10,7 +10,7 @@
 [![Stack](https://img.shields.io/badge/ROS_2-Jetson_Orin-CFB991?style=for-the-badge&labelColor=0B0A08)](#the-cars)
 [![Join](https://img.shields.io/badge/Join_us-BoilerLink-CFB991?style=for-the-badge&labelColor=0B0A08)](https://boilerlink.purdue.edu/organization/arcindy)
 
-<img src="assets/grid-iv2026.jpg" alt="The full grid at Roboracer IV 2026 in Detroit" width="100%">
+
 
 </div>
 
@@ -24,9 +24,7 @@ Members work across the whole problem: writing and tuning planners, building SLA
 
 🏁 **P10 at Roboracer IV 2026 (Detroit)** — In our first season on the international stage, we qualified and raced to a top-10 finish as the **only all-undergraduate team on the grid**, competing against graduate programs from Carnegie Mellon, Penn, UIC, and more.
 
-<div align="center">
-<img src="assets/board-iv2026.jpg" alt="Board members with Car 2 at the Roboracer IV 2026 venue" width="70%">
-</div>
+
 
 ## The cars
 
@@ -52,11 +50,11 @@ The software is our own — waypoint logging and editing tools, velocity profili
 | Meghaj | President · Co-founder |
 | Maninder Kaur | Vice President · Public Relations · Co-founder |
 | Andrew Messiha | Treasurer · Co-founder |
-| Prajwal Vijay Kumar | Co-founder |
 | Jeerapat "Patchy" Suanthong | Head of Autonomy |
-| John Orina | Autonomy Mentor |
 | Nilay Thakkar | Hardware |
 | Dr. Lingxi Li | Faculty Advisor · Co-founder |
+| John Orina | Autonomy Mentor |
+| Prajwal Vijay Kumar | Co-founder |
 
 ## Get involved
 
