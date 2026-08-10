@@ -51,7 +51,7 @@ The software is our own — waypoint logging and editing tools, velocity profili
 | Maninder Kaur | Vice President · Public Relations · Co-founder |
 | Andrew Messiha | Treasurer · Co-founder |
 | Jeerapat "Patchy" Suanthong | Head of Autonomy |
-| Nilay Thakkar | Hardware |
+| Nilay Thakkar | Head of Hardware Design |
 | Dr. Lingxi Li | Faculty Advisor · Co-founder |
 | John Orina | Autonomy Mentor |
 | Prajwal Vijay Kumar | Co-founder |
