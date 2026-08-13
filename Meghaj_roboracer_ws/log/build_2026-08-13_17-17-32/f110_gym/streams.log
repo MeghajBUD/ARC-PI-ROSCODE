@@ -1,0 +1,18 @@
+[0.369s] Invoking command in '/home/orin/Desktop/roboracer-purdue/Meghaj_roboracer_ws/one_car_gym_roboracer/f1tenth_gym': PYTHONPATH=/home/orin/Desktop/roboracer-purdue/Meghaj_roboracer_ws/build/f110_gym/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/orin/Desktop/roboracer-purdue/Meghaj_roboracer_ws/install/f110_gym/lib/python3.10/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py egg_info --egg-base ../../build/f110_gym build --build-base /home/orin/Desktop/roboracer-purdue/Meghaj_roboracer_ws/build/f110_gym/build install --record /home/orin/Desktop/roboracer-purdue/Meghaj_roboracer_ws/build/f110_gym/install.log --single-version-externally-managed
+[0.513s] running egg_info
+[0.513s] creating ../../build/f110_gym/f110_gym.egg-info
+[0.513s] writing ../../build/f110_gym/f110_gym.egg-info/PKG-INFO
+[0.513s] writing dependency_links to ../../build/f110_gym/f110_gym.egg-info/dependency_links.txt
+[0.513s] writing requirements to ../../build/f110_gym/f110_gym.egg-info/requires.txt
+[0.514s] writing top-level names to ../../build/f110_gym/f110_gym.egg-info/top_level.txt
+[0.514s] writing manifest file '../../build/f110_gym/f110_gym.egg-info/SOURCES.txt'
+[0.514s] reading manifest file '../../build/f110_gym/f110_gym.egg-info/SOURCES.txt'
+[0.514s] adding license file 'LICENSE'
+[0.515s] writing manifest file '../../build/f110_gym/f110_gym.egg-info/SOURCES.txt'
+[0.515s] running build
+[0.515s] running install
+[0.515s] running install_egg_info
+[0.516s] Copying ../../build/f110_gym/f110_gym.egg-info to /home/orin/Desktop/roboracer-purdue/Meghaj_roboracer_ws/install/f110_gym/lib/python3.10/site-packages/f110_gym-0.2.1-py3.10.egg-info
+[0.517s] running install_scripts
+[0.531s] writing list of installed files to '/home/orin/Desktop/roboracer-purdue/Meghaj_roboracer_ws/build/f110_gym/install.log'
+[0.548s] Invoked command in '/home/orin/Desktop/roboracer-purdue/Meghaj_roboracer_ws/one_car_gym_roboracer/f1tenth_gym' returned '0': PYTHONPATH=/home/orin/Desktop/roboracer-purdue/Meghaj_roboracer_ws/build/f110_gym/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/orin/Desktop/roboracer-purdue/Meghaj_roboracer_ws/install/f110_gym/lib/python3.10/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py egg_info --egg-base ../../build/f110_gym build --build-base /home/orin/Desktop/roboracer-purdue/Meghaj_roboracer_ws/build/f110_gym/build install --record /home/orin/Desktop/roboracer-purdue/Meghaj_roboracer_ws/build/f110_gym/install.log --single-version-externally-managed
