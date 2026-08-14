@@ -1,75 +1,112 @@
-<div align="center">
+# Roboracer Sim Workspace
 
-# Roboracer @ Purdue
+Autonomous F1TENTH racing simulator for new members. Clone it, run one setup
+script, and you're driving a simulated car and building autonomy on top of it.
 
-**Autonomous racing club · Purdue University in Indianapolis**
+**Target:** Ubuntu 22.04 (in a VM is fine) • ROS 2 Humble
 
-*We build 1/10-scale race cars that perceive, plan, and drive themselves — no driver, no remote control, just code on the racing line.*
+---
 
-[![Competition](https://img.shields.io/badge/Roboracer_IV_2026-P10_·_Detroit-CFB991?style=for-the-badge&labelColor=0B0A08)](https://roboracer.ai)
-[![Stack](https://img.shields.io/badge/ROS_2-Jetson_Orin-CFB991?style=for-the-badge&labelColor=0B0A08)](#the-cars)
-[![Join](https://img.shields.io/badge/Join_us-BoilerLink-CFB991?style=for-the-badge&labelColor=0B0A08)](https://boilerlink.purdue.edu/organization/arcindy)
+## Quick start
 
+```bash
+git clone <REPO_URL> roboracer-template
+cd roboracer-template
+chmod +x setup.sh
+./setup.sh                    # installs ROS 2 Humble + everything, ~15-20 min
+```
 
+Open a **new terminal** when it finishes (so the environment loads), then verify:
 
-</div>
+```bash
+python3 -c "import f110_gym; print('gym OK')"
+```
 
-## Who we are
+If that prints `gym OK`, you're set up.
 
-Roboracer @ Purdue is a student-founded, student-run team that competes on the Roboracer (F1TENTH-class) autonomous racing platform. Our cars carry a complete self-driving stack — LiDAR perception, mapping and localization, trajectory planning, and low-level control — running onboard at race pace.
+---
 
-Members work across the whole problem: writing and tuning planners, building SLAM maps of new tracks, profiling speed through corners, designing and maintaining the vehicles themselves, and calling strategy on race day. The club is undergraduate-led, advised by Dr. Lingxi Li, and open to every major and experience level.
+## Run the sim
 
-## Highlights
+Three terminals. Each new terminal already has ROS + the workspace sourced
+(setup.sh added that to your `~/.bashrc`).
 
-🏁 **P10 at Roboracer IV 2026 (Detroit)** — In our first season on the international stage, we qualified and raced to a top-10 finish as the **only all-undergraduate team on the grid**, competing against graduate programs from Carnegie Mellon, Penn, UIC, and more.
+```bash
+# Terminal 1 — the simulator (map + car in RViz)
+ros2 launch f1tenth_gym_ros gym_bridge_launch.py
 
+# Terminal 2 — drive it manually
+python3 scripts/key_drive.py          # w/s = speed, a/d = steer, space = stop
 
+# Terminal 3 — run an algorithm (your controller goes here)
+python3 scripts/<your_node>.py
+```
 
-## The cars
+Keep Terminal 2 focused while driving or the keys won't register.
 
-Our fleet of 1/10-scale vehicles shares a common platform:
+---
 
-| | |
-|---|---|
-| **Platform** | Roboracer (F1TENTH-class), 1/10 scale |
-| **Compute** | NVIDIA Jetson Orin |
-| **Middleware** | ROS 2 on Ubuntu |
-| **Sensing** | 2D scanning LiDAR + odometry |
-| **Drivetrain** | Brushless motor with VESC controller |
-| **Planning** | Pure Pursuit + Frenet Corridor Planner |
-| **Fallback** | Disparity-extender reactive avoidance |
-| **Mapping** | SLAM-built track maps, hand-refined |
+## What's in here
 
-The software is our own — waypoint logging and editing tools, velocity profiling, and a planner that blends a global racing line with local Frenet-frame corridors, backed by a reactive layer for whatever the race throws at us.
+```
+roboracer-template/
+├── setup.sh                 One-command install (ROS + deps + backend + build)
+├── src/f1tenth_gym_ros/     The ROS 2 sim bridge (map, car, sensors)
+├── scripts/                 Ready-to-use tools:
+│   ├── key_drive.py           keyboard teleop
+│   ├── waypoint_logger.py     record a raceline as you drive
+│   └── velocity_profile.py    add speeds to a recorded raceline
+├── docs/                    Full setup guide + command cheatsheet
+└── f1tenth_gym/             Physics backend (created by setup.sh, not in git)
+```
 
-## Leadership
+---
 
-| Name | Role |
-|---|---|
-| Meghaj | President · Co-founder |
-| Maninder Kaur | Vice President · Public Relations · Co-founder |
-| Andrew Messiha | Treasurer · Co-founder |
-| Jeerapat "Patchy" Suanthong | Head of Autonomy |
-| Nilay Thakkar | Head of Hardware Design |
-| Dr. Lingxi Li | Faculty Advisor · Co-founder |
-| John Orina | Autonomy Mentor |
-| Prajwal Vijay Kumar | Co-founder |
+## The typical workflow
 
-## Get involved
+1. **Drive a lap** with `key_drive.py` while running `waypoint_logger.py` — this
+   records a raceline (`x, y, yaw, speed`) to a CSV.
+2. **Profile it** with `velocity_profile.py` — computes safe cornering speeds.
+3. **Follow it** — write a controller (e.g. pure pursuit) that reads the CSV and
+   publishes drive commands. This is the part you build.
 
-No experience required — just the willingness to learn fast. Whether you want to write code that races, tune a controller until it stops spinning out, or help build the next car, there's a seat for you.
+The sim publishes `/scan` (LiDAR) and `/ego_racecar/odom` (pose) and listens on
+`/drive`. Your nodes subscribe to those and publish drive commands — the same
+interface a real car uses, so code you write here transfers to hardware.
 
-- 🔧 **Join the club:** [BoilerLink — Roboracer @ Purdue](https://boilerlink.purdue.edu/organization/arcindy)
-- 📸 **Follow along:** [@purdue_roboracer](https://www.instagram.com/purdue_roboracer/) on Instagram
+---
 
+## Common issues
 
-## Acknowledgments
+| Problem | Fix |
+|---------|-----|
+| `./setup.sh` won't run — "permission denied" | `chmod +x setup.sh` |
+| setup.sh stops on a conda/venv error | `conda deactivate` (or `deactivate`), rerun |
+| RViz opens no window / hangs | Already handled by setup.sh; open a fresh terminal so the display fix loads |
+| `import f110_gym` fails | Rerun `cd f1tenth_gym && pip3 install -e .` (not inside a venv) |
+| Launch: map file not found | Rebuild: `colcon build && source install/local_setup.bash` |
+| Keys do nothing while driving | Click the teleop terminal to focus it |
 
-Thanks to Dr. Lingxi Li for advising the team, to Purdue University in Indianapolis for supporting student motorsport at 1/10 scale, and to the Roboracer community for building the platform and the grid we race on.
+More detail in `docs/`.
 
-<div align="center">
+---
 
-**Boiler up. Hammer down.** 🔨
+## After editing code
 
-</div>
+Editing a `scripts/*.py` you run directly → just rerun it, no build needed.
+
+Editing anything under `src/` (launch files, config, the bridge) → rebuild:
+
+```bash
+colcon build
+source install/local_setup.bash
+```
+
+---
+
+## Switching maps
+
+Drop `<name>.png` + `<name>.yaml` (same name) into
+`src/f1tenth_gym_ros/maps/`, set `map_path: '<name>'` in
+`src/f1tenth_gym_ros/config/sim.yaml`, then `colcon build`. No file paths to edit —
+the launch resolves the map by name.
