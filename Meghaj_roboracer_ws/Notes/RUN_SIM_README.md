@@ -93,8 +93,9 @@ source /opt/ros/humble/setup.bash && cd ~/Desktop/roboracer-purdue/Meghaj_robora
 ros2 launch f1tenth_gym_ros gym_bridge_launch.py
 
 # T2: drive
+cd ~/Desktop/roboracer-purdue/Meghaj_roboracer_ws/one_car_gym_roboracer # go to the gym scripts
 source /opt/ros/humble/setup.bash
-python3 ~/key_drive.py
+python3 key_drive.py
 
 # T3: algorithm
 source /opt/ros/humble/setup.bash && cd ~/Desktop/roboracer-purdue/Meghaj_roboracer_ws && source install/local_setup.bash
