@@ -9,12 +9,53 @@ script, and you're driving a simulated car and building autonomy on top of it.
 
 ## Quick start
 
+**Step 1 — Create your own branch (on GitHub, before cloning).**
+This repo's `main` is the template only, and `testing_new_ws` is the shared
+starting point everyone builds from. Create your own branch off of
+`testing_new_ws` (not `main`) before you clone — e.g. via the GitHub UI's
+branch dropdown, or from another machine:
 ```bash
-git clone <REPO_URL> roboracer-template
+git fetch origin
+git checkout testing_new_ws
+git checkout -b <your-branch-name>       # e.g. Meghaj_Kabra_ws
+git push -u origin <your-branch-name>
+```
+
+**Step 2 — Clone the repo and check out your branch.**
+```bash
+git clone -b <your-branch-name> <REPO_URL> roboracer-template
 cd roboracer-template
+```
+This clones starting from `testing_new_ws`'s contents, on your own branch —
+so what you see locally matches your branch, not `main`.
+
+**Step 3 — Commit and push only to your own branch.**
+```bash
+git add .
+git commit -m "your message"
+git push origin <your-branch-name>
+```
+Never push directly to `main` or `testing_new_ws` — those stay as shared
+reference points. All of your work stays isolated on your own branch.
+
+Now run setup:
+
+```bash
 chmod +x setup.sh
 ./setup.sh                    # installs ROS 2 Humble + everything, ~15-20 min
 ```
+
+> **Note — adding lab templates (lab1, lab2, etc.) as submodules:**
+> Before adding any lab template as a submodule, **fork it to your own GitHub
+> account first**, then add *your fork's* URL — not the original roboracer
+> template URL. A submodule is a separate repo; commits you make inside it
+> push to whatever URL it points to. If you point it at the shared upstream
+> template, your work (and anyone else's, if they push) lands in the shared
+> repo instead of staying in your own workspace. Forking first keeps your
+> work isolated and safe:
+> ```bash
+> git submodule add git@github.com:<your-username>/<lab-template-repo>.git <path>
+> ```
 
 Open a **new terminal** when it finishes (so the environment loads), then verify:
 
