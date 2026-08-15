@@ -1,75 +1,153 @@
-<div align="center">
+# Roboracer Sim Workspace
 
-# Roboracer @ Purdue
+Autonomous F1TENTH racing simulator for new members. Clone it, run one setup
+script, and you're driving a simulated car and building autonomy on top of it.
 
-**Autonomous racing club · Purdue University in Indianapolis**
+**Target:** Ubuntu 22.04 (in a VM is fine) • ROS 2 Humble
 
-*We build 1/10-scale race cars that perceive, plan, and drive themselves — no driver, no remote control, just code on the racing line.*
+---
 
-[![Competition](https://img.shields.io/badge/Roboracer_IV_2026-P10_·_Detroit-CFB991?style=for-the-badge&labelColor=0B0A08)](https://roboracer.ai)
-[![Stack](https://img.shields.io/badge/ROS_2-Jetson_Orin-CFB991?style=for-the-badge&labelColor=0B0A08)](#the-cars)
-[![Join](https://img.shields.io/badge/Join_us-BoilerLink-CFB991?style=for-the-badge&labelColor=0B0A08)](https://boilerlink.purdue.edu/organization/arcindy)
+## Quick start
 
+**Step 1 — Create your own branch (on GitHub, before cloning).**
+This repo's `main` is the template only, and `testing_new_ws` is the shared
+starting point everyone builds from. Create your own branch off of
+`testing_new_ws` (not `main`) before you clone — e.g. via the GitHub UI's
+branch dropdown, or from another machine:
+```bash
+git fetch origin
+git checkout testing_new_ws
+git checkout -b <your-branch-name>       # e.g. Meghaj_Kabra_ws
+git push -u origin <your-branch-name>
+```
 
+**Step 2 — Clone the repo and check out your branch.**
+```bash
+git clone -b <your-branch-name> <REPO_URL> roboracer-template
+cd roboracer-template
+```
+This clones starting from `testing_new_ws`'s contents, on your own branch —
+so what you see locally matches your branch, not `main`.
 
-</div>
+**Step 3 — Commit and push only to your own branch.**
+```bash
+git add .
+git commit -m "your message"
+git push origin <your-branch-name>
+```
+Never push directly to `main` or `testing_new_ws` — those stay as shared
+reference points. All of your work stays isolated on your own branch.
 
-## Who we are
+Now run setup:
 
-Roboracer @ Purdue is a student-founded, student-run team that competes on the Roboracer (F1TENTH-class) autonomous racing platform. Our cars carry a complete self-driving stack — LiDAR perception, mapping and localization, trajectory planning, and low-level control — running onboard at race pace.
+```bash
+chmod +x setup.sh
+./setup.sh                    # installs ROS 2 Humble + everything, ~15-20 min
+```
 
-Members work across the whole problem: writing and tuning planners, building SLAM maps of new tracks, profiling speed through corners, designing and maintaining the vehicles themselves, and calling strategy on race day. The club is undergraduate-led, advised by Dr. Lingxi Li, and open to every major and experience level.
+> **Note — adding lab templates (lab1, lab2, etc.) as submodules:**
+> Before adding any lab template as a submodule, **fork it to your own GitHub
+> account first**, then add *your fork's* URL — not the original roboracer
+> template URL. A submodule is a separate repo; commits you make inside it
+> push to whatever URL it points to. If you point it at the shared upstream
+> template, your work (and anyone else's, if they push) lands in the shared
+> repo instead of staying in your own workspace. Forking first keeps your
+> work isolated and safe:
+> ```bash
+> git submodule add git@github.com:<your-username>/<lab-template-repo>.git <path>
+> ```
 
-## Highlights
+Open a **new terminal** when it finishes (so the environment loads), then verify:
 
-🏁 **P10 at Roboracer IV 2026 (Detroit)** — In our first season on the international stage, we qualified and raced to a top-10 finish as the **only all-undergraduate team on the grid**, competing against graduate programs from Carnegie Mellon, Penn, UIC, and more.
+```bash
+python3 -c "import f110_gym; print('gym OK')"
+```
 
+If that prints `gym OK`, you're set up.
 
+---
 
-## The cars
+## Run the sim
 
-Our fleet of 1/10-scale vehicles shares a common platform:
+Three terminals. Each new terminal already has ROS + the workspace sourced
+(setup.sh added that to your `~/.bashrc`).
 
-| | |
-|---|---|
-| **Platform** | Roboracer (F1TENTH-class), 1/10 scale |
-| **Compute** | NVIDIA Jetson Orin |
-| **Middleware** | ROS 2 on Ubuntu |
-| **Sensing** | 2D scanning LiDAR + odometry |
-| **Drivetrain** | Brushless motor with VESC controller |
-| **Planning** | Pure Pursuit + Frenet Corridor Planner |
-| **Fallback** | Disparity-extender reactive avoidance |
-| **Mapping** | SLAM-built track maps, hand-refined |
+```bash
+# Terminal 1 — the simulator (map + car in RViz)
+ros2 launch f1tenth_gym_ros gym_bridge_launch.py
 
-The software is our own — waypoint logging and editing tools, velocity profiling, and a planner that blends a global racing line with local Frenet-frame corridors, backed by a reactive layer for whatever the race throws at us.
+# Terminal 2 — drive it manually
+python3 scripts/key_drive.py          # w/s = speed, a/d = steer, space = stop
 
-## Leadership
+# Terminal 3 — run an algorithm (your controller goes here)
+python3 scripts/<your_node>.py
+```
 
-| Name | Role |
-|---|---|
-| Meghaj | President · Co-founder |
-| Maninder Kaur | Vice President · Public Relations · Co-founder |
-| Andrew Messiha | Treasurer · Co-founder |
-| Jeerapat "Patchy" Suanthong | Head of Autonomy |
-| Nilay Thakkar | Head of Hardware Design |
-| Dr. Lingxi Li | Faculty Advisor · Co-founder |
-| John Orina | Autonomy Mentor |
-| Prajwal Vijay Kumar | Co-founder |
+Keep Terminal 2 focused while driving or the keys won't register.
 
-## Get involved
+---
 
-No experience required — just the willingness to learn fast. Whether you want to write code that races, tune a controller until it stops spinning out, or help build the next car, there's a seat for you.
+## What's in here
 
-- 🔧 **Join the club:** [BoilerLink — Roboracer @ Purdue](https://boilerlink.purdue.edu/organization/arcindy)
-- 📸 **Follow along:** [@purdue_roboracer](https://www.instagram.com/purdue_roboracer/) on Instagram
+```
+roboracer-template/
+├── setup.sh                 One-command install (ROS + deps + backend + build)
+├── src/f1tenth_gym_ros/     The ROS 2 sim bridge (map, car, sensors)
+├── scripts/                 Ready-to-use tools:
+│   ├── key_drive.py           keyboard teleop
+│   ├── waypoint_logger.py     record a raceline as you drive
+│   └── velocity_profile.py    add speeds to a recorded raceline
+├── docs/                    Full setup guide + command cheatsheet
+└── f1tenth_gym/             Physics backend (created by setup.sh, not in git)
+```
 
+---
 
-## Acknowledgments
+## The typical workflow
 
-Thanks to Dr. Lingxi Li for advising the team, to Purdue University in Indianapolis for supporting student motorsport at 1/10 scale, and to the Roboracer community for building the platform and the grid we race on.
+1. **Drive a lap** with `key_drive.py` while running `waypoint_logger.py` — this
+   records a raceline (`x, y, yaw, speed`) to a CSV.
+2. **Profile it** with `velocity_profile.py` — computes safe cornering speeds.
+3. **Follow it** — write a controller (e.g. pure pursuit) that reads the CSV and
+   publishes drive commands. This is the part you build.
 
-<div align="center">
+The sim publishes `/scan` (LiDAR) and `/ego_racecar/odom` (pose) and listens on
+`/drive`. Your nodes subscribe to those and publish drive commands — the same
+interface a real car uses, so code you write here transfers to hardware.
 
-**Boiler up. Hammer down.** 🔨
+---
 
-</div>
+## Common issues
+
+| Problem | Fix |
+|---------|-----|
+| `./setup.sh` won't run — "permission denied" | `chmod +x setup.sh` |
+| setup.sh stops on a conda/venv error | `conda deactivate` (or `deactivate`), rerun |
+| RViz opens no window / hangs | Already handled by setup.sh; open a fresh terminal so the display fix loads |
+| `import f110_gym` fails | Rerun `cd f1tenth_gym && pip3 install -e .` (not inside a venv) |
+| Launch: map file not found | Rebuild: `colcon build && source install/local_setup.bash` |
+| Keys do nothing while driving | Click the teleop terminal to focus it |
+
+More detail in `docs/`.
+
+---
+
+## After editing code
+
+Editing a `scripts/*.py` you run directly → just rerun it, no build needed.
+
+Editing anything under `src/` (launch files, config, the bridge) → rebuild:
+
+```bash
+colcon build
+source install/local_setup.bash
+```
+
+---
+
+## Switching maps
+
+Drop `<name>.png` + `<name>.yaml` (same name) into
+`src/f1tenth_gym_ros/maps/`, set `map_path: '<name>'` in
+`src/f1tenth_gym_ros/config/sim.yaml`, then `colcon build`. No file paths to edit —
+the launch resolves the map by name.

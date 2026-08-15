@@ -1,0 +1,43 @@
+{
+  "name": "RoboRacer ROS Dev",
+  "build": {
+    "dockerfile": "Dockerfile",
+    "args": {
+      "WORKSPACE": "roboracer-purdue"   // Change if your repo folder name differs
+    }
+  },
+  "features": {
+    // Provides a web-based VNC desktop to run GUI apps
+    "ghcr.io/rocker-org/devcontainer-features/desktop-lite:1": {
+      "password": "vscode",   // VNC password, change if you want
+      "webPort": "6080",
+      "vncPort": "5901"
+    },
+    // Adds GitHub CLI for convenience
+    "ghcr.io/devcontainers/features/github-cli:1": {}
+  },
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "ms-iot.vscode-ros",       // ROS extension
+        "twxs.cmake",              // CMake support
+        "ms-vscode.cpptools"       // C++ IntelliSense
+      ]
+    }
+  },
+  // Commands to run after the container is created
+  "postCreateCommand": "bash .devcontainer/post-create.sh",
+  // Forward the VNC web port so Codespaces gives you a browser link
+  "forwardPorts": [6080],
+  "portsAttributes": {
+    "6080": {
+      "label": "VNC Web Client",
+      "onAutoForward": "openPreview"
+    }
+  },
+  // Use the host's network for ROS (optional)
+  "runArgs": ["--network=host"],
+  // Mount the workspace (already mounted by default)
+  "workspaceMount": "",
+  "workspaceFolder": "/workspaces/${localWorkspaceFolderBasename}"
+}
