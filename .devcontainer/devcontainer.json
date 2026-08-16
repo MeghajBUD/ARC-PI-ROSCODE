@@ -24,8 +24,6 @@
       "label": "VNC Web Client",
       "onAutoForward": "openPreview"
     }
-  },
-  "runArgs": ["--network=host"],
-  "workspaceMount": "",
-  "workspaceFolder": "/workspaces/${localWorkspaceFolderBasename}"
+  }
+  // removed workspaceMount and runArgs
 }

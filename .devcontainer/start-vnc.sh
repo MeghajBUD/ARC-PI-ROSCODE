@@ -1,18 +1,25 @@
 #!/bin/bash
-# Exit on error
 set -e
 
-# Kill any existing VNC session on display :0
+# Kill existing session
 vncserver -kill :0 2>/dev/null || true
 
-# Set VNC password for the current user (vscode)
+# Create xstartup for XFCE
 mkdir -p ~/.vnc
+cat > ~/.vnc/xstartup << 'EOF'
+#!/bin/sh
+unset SESSION_MANAGER
+unset DBUS_SESSION_BUS_ADDRESS
+startxfce4 &
+EOF
+chmod +x ~/.vnc/xstartup
+
+# Set password
 echo "vscode" | vncpasswd -f > ~/.vnc/passwd
 chmod 600 ~/.vnc/passwd
 
-# Start VNC server on display :0
+# Start VNC server
 vncserver :0 -geometry 1280x720 -depth 24 -localhost no
 
-# Start websockify to bridge VNC to web (port 6080)
-# Use --verbose to log errors if needed
+# Start websockify (background, ignore failures)
 websockify --web /usr/share/novnc 6080 localhost:5900 --verbose &

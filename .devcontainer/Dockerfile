@@ -14,7 +14,7 @@ RUN apt-get update && apt-get install -y \
 RUN curl -sSL https://raw.githubusercontent.com/ros/rosdistro/master/ros.key -o /usr/share/keyrings/ros-archive-keyring.gpg && \
     echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/ros-archive-keyring.gpg] http://packages.ros.org/ros2/ubuntu $(lsb_release -cs) main" | tee /etc/apt/sources.list.d/ros2.list > /dev/null
 
-# Install everything: ROS, VNC, tools
+# Install lightweight ROS, VNC, and tools (remove supervisor, heavy desktop)
 RUN apt-get update && apt-get install -y \
     python3-pip \
     python3-colcon-common-extensions \
@@ -25,11 +25,10 @@ RUN apt-get update && apt-get install -y \
     git \
     xfce4 \
     xfce4-terminal \
-    tightvncserver \
-    novnc \
-    websockify \
-    supervisor \
-    ros-humble-desktop \
+    tigervnc-standalone-server \
+    ros-humble-ros-base \
+    ros-humble-rviz2 \
+    ros-humble-nav2-msgs \
     && rm -rf /var/lib/apt/lists/*
 
 # Init rosdep
@@ -39,23 +38,20 @@ RUN rosdep init && rosdep update
 RUN useradd -m -u 1000 -s /bin/bash vscode && \
     echo "vscode ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
 
-# Set up workspace directory
-ARG WORKSPACE=roboracer-purdue
-ENV ROS_WS=/workspaces/$WORKSPACE
-RUN mkdir -p $ROS_WS/src
+# ❗ Do NOT hardcode the workspace name here.
+# We'll use a generic /workspaces folder and let post-create.sh find the repo.
+WORKDIR /workspaces
 
-# Set ownership to vscode
-RUN chown -R vscode:vscode $ROS_WS
+# Set ownership to vscode (the folder will be mounted by Codespaces at runtime)
+RUN chown -R vscode:vscode /workspaces
 
-# Source ROS automatically for vscode user
-RUN echo "source /opt/ros/humble/setup.bash" >> /home/vscode/.bashrc && \
-    echo "source ${ROS_WS}/install/setup.bash" >> /home/vscode/.bashrc
+# Source ROS automatically (remove the install/setup.bash line – it doesn't exist yet)
+RUN echo "source /opt/ros/humble/setup.bash" >> /home/vscode/.bashrc
 
 # Copy VNC start script and make it executable
 COPY start-vnc.sh /usr/local/bin/start-vnc.sh
 RUN chmod +x /usr/local/bin/start-vnc.sh
 
-# Switch to vscode user for all future commands
+# Switch to vscode user
 USER vscode
-WORKDIR $ROS_WS
 ENV DEBIAN_FRONTEND=dialog
